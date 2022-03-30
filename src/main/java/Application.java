@@ -16,5 +16,11 @@ class Application {
         ConsolePrinter.print(
                 TimeStampMessageDecorator.decorate("My new message")
         );
+        ConsolePrinter.print(
+                TimeStampMessageDecorator.decorate("My new message2")
+        );
+        ConsolePrinter.print(
+                TimeStampMessageDecorator.decorate("My new message3")
+        );
     }
 }
