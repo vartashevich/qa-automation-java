@@ -11,9 +11,11 @@ import java.time.Instant;
 public class TimeStampMessageDecorator {
     /**
      * @param message сообщение, передаваемое для декорирования в виде добавления даты
-     * @return Возвращаем исходное сообщение дополненное текущей датой
+     * @return Возвращаем переменную decoratedMessage - результат декорирования сообщения message
      */
     public static String decorate(String message) {
-        return Instant.now().toString() + " " + message;
+
+        String decoratedMessage = Instant.now().toString() + " " + message;
+        return decoratedMessage;
     }
 }
