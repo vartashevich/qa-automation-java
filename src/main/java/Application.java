@@ -13,14 +13,11 @@ class Application {
      */
     public static void main(String[] args) {
         ConsolePrinter.print("Hello world!");
-        ConsolePrinter.print(
-                TimeStampMessageDecorator.decorate("My new message")
-        );
-        ConsolePrinter.print(
-                TimeStampMessageDecorator.decorate("My new message2")
-        );
-        ConsolePrinter.print(
-                TimeStampMessageDecorator.decorate("My new message3")
-        );
+
+        for (int i = 0; i < 5; i++) {
+            ConsolePrinter.print(
+                    TimeStampMessageDecorator.decorate("My new message")
+            );
+        }
     }
 }
