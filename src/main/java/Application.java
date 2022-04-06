@@ -12,9 +12,8 @@ class Application {
      * @param args аргументы командной строки передаваемые строками
      */
     public static void main(String[] args) {
-        ConsolePrinter.print("Hello world!");
 
-        for (int i = 0; i < 5; i++) {
+        for (int i = 0; i < 10; i++) {
             ConsolePrinter.print(
                     TimeStampMessageDecorator.decorate("My new message")
             );

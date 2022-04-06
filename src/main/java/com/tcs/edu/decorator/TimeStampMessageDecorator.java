@@ -9,10 +9,12 @@ import java.time.Instant;
  */
 
 public class TimeStampMessageDecorator {
-    private static int messageCount = 0;
+    public static int messageCount = 0;
+    private static final int pageMessageCount = 3;
 
     /**
-     * <p>Метод decorate украшает полученное в аргументе сообщение.
+     * <p>Метод decorate украшает полученное в аргументе сообщение. Разделяем постранично сообщения в зависимости от
+     * pageMessageCount.
      * decoratedMessage - константа состоящая из кол-ва выводов сообщений, текущей даты и сообщения<p/>
      *
      * @param message сообщение, передаваемое для декорирования в виде добавления даты
@@ -21,8 +23,12 @@ public class TimeStampMessageDecorator {
 
 
     public static String decorate(String message) {
+        if (messageCount % pageMessageCount == 0 && messageCount != 0) {
+            System.out.println("----------------------------");
+        }
         messageCount++;
-        final var decoratedMessage = messageCount + " " + Instant.now().toString() + " " + message;
+
+        final var decoratedMessage = String.format("%d %s %s", messageCount, Instant.now().toString(), message);
         return decoratedMessage;
     }
 }
