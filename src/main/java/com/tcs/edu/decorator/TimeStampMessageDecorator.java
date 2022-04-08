@@ -10,7 +10,7 @@ import java.time.Instant;
 
 public class TimeStampMessageDecorator {
     public static int messageCount = 0;
-    private static final int pageMessageCount = 3;
+    private static final int PAGE_MESSAGE_COUNT = 3;
 
     /**
      * <p>Метод decorate украшает полученное в аргументе сообщение. Разделяем постранично сообщения в зависимости от
@@ -23,7 +23,7 @@ public class TimeStampMessageDecorator {
 
 
     public static String decorate(String message) {
-        if (messageCount % pageMessageCount == 0 && messageCount != 0) {
+        if (messageCount % PAGE_MESSAGE_COUNT == 0 && messageCount != 0) {
             System.out.println("----------------------------");
         }
         messageCount++;
