@@ -1,5 +1,5 @@
-import com.tcs.edu.decorator.TimeStampMessageDecorator;
-import com.tcs.edu.printer.ConsolePrinter;
+import com.tcs.edu.processor.MessageService;
+import com.tcs.edu.helper.Severity;
 
 
 /**
@@ -13,10 +13,14 @@ class Application {
      */
     public static void main(String[] args) {
 
-        for (int i = 0; i < 10; i++) {
-            ConsolePrinter.print(
-                    TimeStampMessageDecorator.decorate("My new message")
-            );
+        for (int i = 0; i < 7; i++) {
+
+            MessageService.logMessage(Severity.MAJOR, "My major message!");
+
         }
+
+        MessageService.logMessage(Severity.REGULAR, "My regular message!");
+        MessageService.logMessage(Severity.MINOR, "My minor message!");
+
     }
 }

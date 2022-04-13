@@ -6,6 +6,7 @@ package com.tcs.edu.printer;
  * @author Artashevich Viktor
  */
 public class ConsolePrinter {
+
     /**
      * Prints the message
      * No side-effects
