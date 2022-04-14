@@ -21,6 +21,7 @@ class Application {
 
         MessageService.logMessage(Severity.REGULAR, "My regular message!");
         MessageService.logMessage(Severity.MINOR, "My minor message!");
+        MessageService.logMessage(Severity.REGULAR, "My first", "My second", "My third");
 
     }
 }
