@@ -12,15 +12,11 @@ class Application {
      * @param args аргументы командной строки передаваемые строками
      */
     public static void main(String[] args) {
-
         for (int i = 0; i < 7; i++) {
-
             MessageService.logMessage(Severity.MAJOR, "My major message!");
-
         }
-
         MessageService.logMessage(Severity.REGULAR, "My regular message!");
         MessageService.logMessage(Severity.MINOR, "My minor message!");
-
+        MessageService.logMessage(Severity.REGULAR, "My first", "My second", "My third");
     }
 }
