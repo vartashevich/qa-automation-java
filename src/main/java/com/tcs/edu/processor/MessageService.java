@@ -17,12 +17,12 @@ public class MessageService {
      *
      * @param severity Важность сообщения, соответствует Enum
      * @param message  Строковое сообщение, которое нужно обработать
-     * @param messages Массив строк, который нужно обработать
+     * @param additionalMessages Массив строк, который нужно обработать
      */
 
-    public static void logMessage(Severity severity, String message, String... messages) {
+    public static void logMessage(Severity severity, String message, String... additionalMessages) {
         ConsolePrinter.print(TimeStampMessageDecorator.decorate(message) + " " + SeverityDecorator.decorate(severity));
-        for (String current : messages) {
+        for (String current : additionalMessages) {
             ConsolePrinter.print(TimeStampMessageDecorator.decorate(current) + " " + SeverityDecorator.decorate(severity));
         }
     }
