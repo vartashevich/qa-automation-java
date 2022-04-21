@@ -1,6 +1,7 @@
-import com.tcs.edu.processor.MessageService;
+import com.tcs.edu.helper.Doubling;
+import com.tcs.edu.helper.MessageOrder;
 import com.tcs.edu.helper.Severity;
-
+import com.tcs.edu.processor.MessageService;
 
 /**
  * Класс, выступающий входной точкой для тестового приложения
@@ -12,11 +13,12 @@ class Application {
      * @param args аргументы командной строки передаваемые строками
      */
     public static void main(String[] args) {
-        for (int i = 0; i < 7; i++) {
-            MessageService.logMessage(Severity.MAJOR, "My major message!");
+        for (int i = 0; i < 6; i++) {
+            MessageService.logMessage(Severity.MAJOR, "My major message! ");
         }
-        MessageService.logMessage(Severity.REGULAR, "My regular message!");
-        MessageService.logMessage(Severity.MINOR, "My minor message!");
-        MessageService.logMessage(Severity.REGULAR, "My first", "My second", "My third");
+        MessageService.logMessage(Severity.MAJOR, MessageOrder.DESC, "111", "222", "333");
+        MessageService.logMessage(Severity.REGULAR, MessageOrder.ASC, "aaa", "bbb", "ccc");
+        MessageService.logMessage(Severity.REGULAR, MessageOrder.ASC, Doubling.DISTINCT, "!!!", "@@@", "###", "###", "@@@", "%%%");
+        MessageService.logMessage(Severity.REGULAR, MessageOrder.ASC, "mess", null, "mess2");
     }
 }
