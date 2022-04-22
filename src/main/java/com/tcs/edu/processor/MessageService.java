@@ -7,8 +7,6 @@ import com.tcs.edu.helper.MessageOrder;
 import com.tcs.edu.helper.Severity;
 import com.tcs.edu.printer.ConsolePrinter;
 
-import java.util.Arrays;
-
 /**
  * Created on 13.04.2022
  * Класс для обработки сообщений.
@@ -120,7 +118,7 @@ public class MessageService {
                 case DISTINCT: {
                     processedMessages = new String[additionalMessages.length];
                     for (int i = 0; i <= additionalMessages.length - 1; i++) {
-                        if (!Arrays.asList(processedMessages).contains(additionalMessages[i])) {
+                        if (!isArrayContainsMessage(additionalMessages[i], processedMessages)) {
                             processedMessages[i] = additionalMessages[i];
                         }
                     }
@@ -136,7 +134,7 @@ public class MessageService {
             }
             return processedMessages;
         }
-        return new String[0];
+        return null;
     }
 
     /**
@@ -163,5 +161,25 @@ public class MessageService {
         if (message != null) {
             ConsolePrinter.print(TimeStampMessageDecorator.decorate(message) + " " + SeverityDecorator.decorate(severity));
         }
+    }
+
+    /**
+     * Метод проверяющий наличие сообщения в массиве сообщений
+     *
+     * @param message Сообщение, которое проверяем на наличие в массиве
+     * @param array   Массив сообщений, с которым сравниваем
+     * @return isArrayContainsMessage признак наличия или отсутствия элемента в массиве
+     */
+    private static boolean isArrayContainsMessage(String message, String... array) {
+        boolean isArrayContainsMessage = false;
+        if (array != null) {
+            for (String current : array) {
+                if (current != null && current.equals(message)) {
+                    isArrayContainsMessage = true;
+                    break;
+                }
+            }
+        }
+        return isArrayContainsMessage;
     }
 }

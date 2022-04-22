@@ -19,6 +19,5 @@ class Application {
         MessageService.logMessage(Severity.MAJOR, MessageOrder.DESC, "111", "222", "333");
         MessageService.logMessage(Severity.REGULAR, MessageOrder.ASC, "aaa", "bbb", "ccc");
         MessageService.logMessage(Severity.REGULAR, MessageOrder.ASC, Doubling.DISTINCT, "!!!", "@@@", "###", "###", "@@@", "%%%");
-        MessageService.logMessage(Severity.REGULAR, MessageOrder.ASC, "mess", null, "mess2");
     }
 }
