@@ -2,9 +2,9 @@ package com.tcs.edu.processor;
 
 import com.tcs.edu.decorator.SeverityDecorator;
 import com.tcs.edu.decorator.TimeStampMessageDecorator;
+import com.tcs.edu.domain.Message;
 import com.tcs.edu.helper.Doubling;
 import com.tcs.edu.helper.MessageOrder;
-import com.tcs.edu.helper.Severity;
 import com.tcs.edu.printer.ConsolePrinter;
 
 /**
@@ -25,8 +25,8 @@ public class MessageService {
      * @param message            Основное строковое сообщение, которое нужно обработать
      * @param additionalMessages массив дополнительных сообщений
      */
-    public static void logMessage(Severity severity, String message, String... additionalMessages) {
-        logMessage(severity, MessageOrder.ASC, message, additionalMessages);
+    public static void logMessage(Message message, Message... messages) {
+        logMessage(MessageOrder.ASC, message, messages);
     }
 
     /**
@@ -39,8 +39,8 @@ public class MessageService {
      * @param message            Основное строковое сообщение, которое нужно обработать
      * @param additionalMessages массив дополнительных сообщений
      */
-    public static void logMessage(Severity severity, MessageOrder order, String message, String... additionalMessages) {
-        logMessage(severity, order, Doubling.DEFAULT, message, additionalMessages);
+    public static void logMessage(MessageOrder order, Message message, Message... messages) {
+        logMessage(order, Doubling.DEFAULT, message, messages);
     }
 
     /**
@@ -54,11 +54,16 @@ public class MessageService {
      * @param message            Основное строковое сообщение, которое нужно обработать
      * @param additionalMessages массив дополнительных сообщений
      */
-    public static void logMessage(Severity severity, MessageOrder order, Doubling doubling, String message, String... additionalMessages) {
-        printMessage(severity, message);
-        String[] processedMessages = processMessages(doubling, additionalMessages);
-        String[] sortedMessages = sortMessages(order, processedMessages);
-        printAdditionalMessages(severity, sortedMessages);
+    @SuppressWarnings("ConstantConditions")
+    public static void logMessage(MessageOrder order, Doubling doubling, Message message, Message... messages) {
+        Message[] allMessages = new Message[messages.length + 1];
+        allMessages[0] = message;
+        if (messages != null) {
+            System.arraycopy(messages, 0, allMessages, 1, messages.length);
+        }
+        Message[] processedMessages = processMessages(doubling, allMessages);
+        Message[] sortedMessages = sortMessages(order, processedMessages);
+        printAdditionalMessages(sortedMessages);
     }
 
     /**
@@ -68,26 +73,22 @@ public class MessageService {
      * @param additionalMessages массив дополнительных сообщений
      * @return массив отсортированных сообщений
      */
-    private static String[] sortMessages(MessageOrder order, String... additionalMessages) {
-        if (additionalMessages != null) {
-            String[] sortedMessages = new String[additionalMessages.length];
+    private static Message[] sortMessages(MessageOrder order, Message... processedMessages) {
+        if (processedMessages != null) {
+            Message[] sortedMessages = new Message[processedMessages.length];
             switch (order) {
                 case ASC: {
-                    for (int i = 0; i <= additionalMessages.length - 1; i++) {
-                        sortedMessages[i] = additionalMessages[i];
-                    }
+                    System.arraycopy(processedMessages, 0, sortedMessages, 0, processedMessages.length - 1 + 1);
                     break;
                 }
                 case DESC: {
-                    for (int i = additionalMessages.length - 1, j = 0; i >= 0; i--, j++) {
-                        sortedMessages[j] = additionalMessages[i];
+                    for (int i = processedMessages.length - 1, j = 0; i >= 0; i--, j++) {
+                        sortedMessages[j] = processedMessages[i];
                     }
                 }
                 break;
                 default: {
-                    for (int i = 0; i <= additionalMessages.length - 1; i++) {
-                        sortedMessages[i] = additionalMessages[i];
-                    }
+                    System.arraycopy(processedMessages, 0, sortedMessages, 0, processedMessages.length - 1 + 1);
                 }
             }
             return sortedMessages;
@@ -103,36 +104,40 @@ public class MessageService {
      * @param additionalMessages массив дополнительных сообщений
      * @return возвращаем массив обработанных сообщений
      */
-    private static String[] processMessages(Doubling doubling, String... additionalMessages) {
-        if (additionalMessages != null) {
-            String[] processedMessages;
-            switch (doubling) {
-                case DOUBLES: {
-                    processedMessages = new String[additionalMessages.length * 2];
-                    for (int i = 0, j = 0; i <= additionalMessages.length - 1; i++, j = j + 2) {
-                        processedMessages[j] = additionalMessages[i];
-                        processedMessages[j + 1] = additionalMessages[i];
-                    }
-                }
-                break;
-                case DISTINCT: {
-                    processedMessages = new String[additionalMessages.length];
-                    for (int i = 0; i <= additionalMessages.length - 1; i++) {
-                        if (!isArrayContainsMessage(additionalMessages[i], processedMessages)) {
-                            processedMessages[i] = additionalMessages[i];
+    private static Message[] processMessages(Doubling doubling, Message... allMessages) {
+        if (allMessages != null) {
+            Message[] processedMessages;
+            if (doubling != null) {
+                switch (doubling) {
+                    case DOUBLES: {
+                        processedMessages = new Message[allMessages.length * 2];
+                        for (int i = 0, j = 0; i <= allMessages.length - 1; i++, j = j + 2) {
+                            processedMessages[j] = allMessages[i];
+                            processedMessages[j + 1] = allMessages[i];
                         }
                     }
-                }
-                break;
-                default: {
-                    processedMessages = new String[additionalMessages.length];
-                    for (int i = 0; i <= additionalMessages.length - 1; i++) {
-                        processedMessages[i] = additionalMessages[i];
+                    break;
+                    case DISTINCT: {
+                        processedMessages = new Message[allMessages.length];
+                        for (int i = 0; i <= allMessages.length - 1; i++) {
+                            if (!isArrayContainsMessage(allMessages[i], processedMessages)) {
+                                processedMessages[i] = allMessages[i];
+                            }
+                        }
                     }
+                    break;
+                    default: {
+                        processedMessages = new Message[allMessages.length];
+                        System.arraycopy(allMessages, 0, processedMessages, 0, allMessages.length - 1 + 1);
+                    }
+                    break;
                 }
-                break;
+                return processedMessages;
+            } else {
+                processedMessages = new Message[allMessages.length];
+                System.arraycopy(allMessages, 0, processedMessages, 0, allMessages.length - 1 + 1);
+                return processedMessages;
             }
-            return processedMessages;
         }
         return null;
     }
@@ -143,10 +148,10 @@ public class MessageService {
      * @param severity           Уровень важности сообщения
      * @param additionalMessages массив дополнительных сообщений
      */
-    private static void printAdditionalMessages(Severity severity, String... additionalMessages) {
+    private static void printAdditionalMessages(Message... additionalMessages) {
         if (additionalMessages != null) {
-            for (String current : additionalMessages) {
-                printMessage(severity, current);
+            for (Message current : additionalMessages) {
+                printMessage(current);
             }
         }
     }
@@ -157,9 +162,11 @@ public class MessageService {
      * @param severity Уровень важности сообщения
      * @param message  Основное троковое сообщение, которое нужно обработать
      */
-    private static void printMessage(Severity severity, String message) {
+    private static void printMessage(Message message) {
         if (message != null) {
-            ConsolePrinter.print(TimeStampMessageDecorator.decorate(message) + " " + SeverityDecorator.decorate(severity));
+            if (message.getSeverity() != null) {
+                ConsolePrinter.print(TimeStampMessageDecorator.decorate(message.getBody()) + " " + SeverityDecorator.decorate(message.getSeverity()));
+            } else ConsolePrinter.print(TimeStampMessageDecorator.decorate(message.getBody()));
         }
     }
 
@@ -170,10 +177,10 @@ public class MessageService {
      * @param array   Массив сообщений, с которым сравниваем
      * @return isArrayContainsMessage признак наличия или отсутствия элемента в массиве
      */
-    private static boolean isArrayContainsMessage(String message, String... array) {
+    private static boolean isArrayContainsMessage(Message message, Message... array) {
         boolean isArrayContainsMessage = false;
         if (array != null) {
-            for (String current : array) {
+            for (Message current : array) {
                 if (current != null && current.equals(message)) {
                     isArrayContainsMessage = true;
                     break;
