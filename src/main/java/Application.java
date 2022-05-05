@@ -20,5 +20,7 @@ class Application {
         MessageService.logMessage(MessageOrder.ASC, m2);
         MessageService.logMessage(MessageOrder.ASC, m1, m2);
         MessageService.logMessage(MessageOrder.DESC, Doubling.DOUBLES, m1, m2);
+        MessageService.logMessage(MessageOrder.DESC, Doubling.DISTINCT, m1, m2);
+        MessageService.logMessage(MessageOrder.ASC, Doubling.DEFAULT, m1, m2);
     }
 }
