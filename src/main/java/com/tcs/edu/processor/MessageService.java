@@ -63,7 +63,7 @@ public class MessageService {
         }
         Message[] processedMessages = processMessages(doubling, allMessages);
         Message[] sortedMessages = sortMessages(order, processedMessages);
-        printAdditionalMessages(sortedMessages);
+        printMessages(sortedMessages);
     }
 
     /**
@@ -73,22 +73,23 @@ public class MessageService {
      * @param additionalMessages массив дополнительных сообщений
      * @return массив отсортированных сообщений
      */
-    private static Message[] sortMessages(MessageOrder order, Message... processedMessages) {
+    private static Message[] sortMessages(final MessageOrder order, final Message... processedMessages) {
         if (processedMessages != null) {
-            Message[] sortedMessages = new Message[processedMessages.length];
+            Message[] sortedMessages;
             switch (order) {
                 case ASC: {
-                    System.arraycopy(processedMessages, 0, sortedMessages, 0, processedMessages.length - 1 + 1);
+                    sortedMessages=processedMessages;
                     break;
                 }
                 case DESC: {
+                    sortedMessages = new Message[processedMessages.length];
                     for (int i = processedMessages.length - 1, j = 0; i >= 0; i--, j++) {
                         sortedMessages[j] = processedMessages[i];
                     }
                 }
                 break;
                 default: {
-                    System.arraycopy(processedMessages, 0, sortedMessages, 0, processedMessages.length - 1 + 1);
+                    sortedMessages=processedMessages;
                 }
             }
             return sortedMessages;
@@ -111,9 +112,9 @@ public class MessageService {
                 switch (doubling) {
                     case DOUBLES: {
                         processedMessages = new Message[allMessages.length * 2];
-                        for (int i = 0, j = 0; i <= allMessages.length - 1; i++, j = j + 2) {
-                            processedMessages[j] = allMessages[i];
-                            processedMessages[j + 1] = allMessages[i];
+                        for (int i = 0; i < allMessages.length; i++) {
+                            processedMessages[i*2] = allMessages[i];
+                            processedMessages[i*2 + 1] = allMessages[i];
                         }
                     }
                     break;
@@ -148,7 +149,7 @@ public class MessageService {
      * @param severity           Уровень важности сообщения
      * @param additionalMessages массив дополнительных сообщений
      */
-    private static void printAdditionalMessages(Message... additionalMessages) {
+    private static void printMessages(Message... additionalMessages) {
         if (additionalMessages != null) {
             for (Message current : additionalMessages) {
                 printMessage(current);
@@ -160,7 +161,7 @@ public class MessageService {
      * Метод печатает обработанное сообщение
      *
      * @param severity Уровень важности сообщения
-     * @param message  Основное троковое сообщение, которое нужно обработать
+     * @param message  Основное строковое сообщение, которое нужно обработать
      */
     private static void printMessage(Message message) {
         if (message != null) {
