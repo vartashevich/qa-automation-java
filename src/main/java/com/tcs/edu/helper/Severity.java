@@ -7,5 +7,14 @@ package com.tcs.edu.helper;
  * Содержит уровни важности сообщений
  */
 public enum Severity {
-    MINOR, REGULAR, MAJOR
+    MINOR("()"), REGULAR("(!)"), MAJOR("(!!!)");
+    private final String value;
+
+    Severity(String value) {
+        this.value = value;
+    }
+
+    public String getValue() {
+        return value;
+    }
 }

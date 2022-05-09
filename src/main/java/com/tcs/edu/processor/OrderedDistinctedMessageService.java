@@ -15,17 +15,16 @@ import com.tcs.edu.printer.ConsolePrinter;
  *
  * @author Viktor Artashevich
  */
-public class MessageService {
+public class OrderedDistinctedMessageService implements com.tcs.edu.MessageService {
     /**
      * Метод обработки сообщений. Вызывает перегруженный метод logMessage.
      * В качестве порядка передаем ASC, который является порядком по умолчанию.
      * В результате печатаются обработанные сообщения.
      *
-     * @param severity           Важность сообщения, соответствует Enum
-     * @param message            Основное строковое сообщение, которое нужно обработать
-     * @param additionalMessages массив дополнительных сообщений
+     * @param message  Экземпляр объекта типа Message
+     * @param messages массив объектов Message
      */
-    public static void logMessage(Message message, Message... messages) {
+    public void logMessage(Message message, Message... messages) {
         logMessage(MessageOrder.ASC, message, messages);
     }
 
@@ -34,28 +33,26 @@ public class MessageService {
      * В качестве варианта обработки передаем DEFAULT, который является обработкой по умолчанию.
      * В результате печатаются обработанные сообщения.
      *
-     * @param severity           Важность сообщения, соответствует Enum
-     * @param order              enum порядка вывода сообщений из массива дополнительных сообщений
-     * @param message            Основное строковое сообщение, которое нужно обработать
-     * @param additionalMessages массив дополнительных сообщений
+     * @param order    порядок вывода сообщений из массива дополнительных сообщений
+     * @param message  Экземпляр объекта типа Message
+     * @param messages массив объектов Message
      */
-    public static void logMessage(MessageOrder order, Message message, Message... messages) {
+    public void logMessage(MessageOrder order, Message message, Message... messages) {
         logMessage(order, Doubling.DEFAULT, message, messages);
     }
 
     /**
-     * Метод обработки сообщений. Сначала обрабатываем сообщения в зависимости от ваианта Doubling,
+     * Метод обработки сообщений. Сначала обрабатываем сообщения в зависимости от варианта Doubling,
      * потом сортируем полученный массив. Затем печатаем уже отсортированный массив.
      * В результате печатаются обработанные сообщения.
      *
-     * @param severity           Важность сообщения, соответствует Enum
-     * @param order              enum порядка вывода сообщений из массива дополнительных сообщений
-     * @param doubling           enum с вариантами обработки сообщений
-     * @param message            Основное строковое сообщение, которое нужно обработать
-     * @param additionalMessages массив дополнительных сообщений
+     * @param order    enum порядка вывода сообщений из массива дополнительных сообщений
+     * @param doubling enum с вариантами обработки сообщений
+     * @param message  Экземпляр объекта типа Message
+     * @param messages массив объектов Message
      */
     @SuppressWarnings("ConstantConditions")
-    public static void logMessage(MessageOrder order, Doubling doubling, Message message, Message... messages) {
+    public void logMessage(MessageOrder order, Doubling doubling, Message message, Message... messages) {
         Message[] allMessages = new Message[messages.length + 1];
         allMessages[0] = message;
         if (messages != null) {
@@ -69,16 +66,16 @@ public class MessageService {
     /**
      * Метод сортирует массив дополнительных сообщений в зависимости от порядка MessageOrder
      *
-     * @param order              enum порядка вывода сообщений из массива дополнительных сообщений
-     * @param additionalMessages массив дополнительных сообщений
+     * @param order             enum порядка вывода сообщений из массива дополнительных сообщений
+     * @param processedMessages массив обработанных сообщений
      * @return массив отсортированных сообщений
      */
-    private static Message[] sortMessages(final MessageOrder order, final Message... processedMessages) {
+    public Message[] sortMessages(final MessageOrder order, final Message... processedMessages) {
+        Message[] sortedMessages = null;
         if (processedMessages != null) {
-            Message[] sortedMessages;
             switch (order) {
                 case ASC: {
-                    sortedMessages=processedMessages;
+                    sortedMessages = processedMessages;
                     break;
                 }
                 case DESC: {
@@ -89,32 +86,30 @@ public class MessageService {
                 }
                 break;
                 default: {
-                    sortedMessages=processedMessages;
+                    sortedMessages = processedMessages;
                 }
             }
-            return sortedMessages;
-        } else {
-            return null;
         }
+        return sortedMessages;
     }
 
     /**
      * Метод обрабатывает массив дополнительных сообщений, в зависимости от вариантов обработки Doubling
      *
-     * @param doubling           enum с вариантами обработки сообщений
-     * @param additionalMessages массив дополнительных сообщений
+     * @param doubling    enum с вариантами обработки сообщений
+     * @param allMessages массив сообщений
      * @return возвращаем массив обработанных сообщений
      */
-    private static Message[] processMessages(Doubling doubling, Message... allMessages) {
+    public Message[] processMessages(Doubling doubling, Message... allMessages) {
+        Message[] processedMessages = allMessages;
         if (allMessages != null) {
-            Message[] processedMessages;
             if (doubling != null) {
                 switch (doubling) {
                     case DOUBLES: {
                         processedMessages = new Message[allMessages.length * 2];
                         for (int i = 0; i < allMessages.length; i++) {
-                            processedMessages[i*2] = allMessages[i];
-                            processedMessages[i*2 + 1] = allMessages[i];
+                            processedMessages[i * 2] = allMessages[i];
+                            processedMessages[i * 2 + 1] = allMessages[i];
                         }
                     }
                     break;
@@ -127,29 +122,19 @@ public class MessageService {
                         }
                     }
                     break;
-                    default: {
-                        processedMessages = new Message[allMessages.length];
-                        System.arraycopy(allMessages, 0, processedMessages, 0, allMessages.length - 1 + 1);
-                    }
-                    break;
                 }
-                return processedMessages;
-            } else {
-                processedMessages = new Message[allMessages.length];
-                System.arraycopy(allMessages, 0, processedMessages, 0, allMessages.length - 1 + 1);
-                return processedMessages;
             }
         }
-        return null;
+        return processedMessages;
     }
 
     /**
-     * Метод печатает дополнительны сообщения, которые были переданы в массиве
+     * Метод печатает сообщения, которые были переданы в массиве
      *
      * @param severity           Уровень важности сообщения
      * @param additionalMessages массив дополнительных сообщений
      */
-    private static void printMessages(Message... additionalMessages) {
+    private void printMessages(Message... additionalMessages) {
         if (additionalMessages != null) {
             for (Message current : additionalMessages) {
                 printMessage(current);
@@ -160,22 +145,24 @@ public class MessageService {
     /**
      * Метод печатает обработанное сообщение
      *
-     * @param severity Уровень важности сообщения
-     * @param message  Основное строковое сообщение, которое нужно обработать
+     * @param message Экземпляр объекта типа Message
      */
-    private static void printMessage(Message message) {
+    private void printMessage(Message message) {
+        ConsolePrinter result = new ConsolePrinter();
+        TimeStampMessageDecorator decor = new TimeStampMessageDecorator();
+        SeverityDecorator severity = new SeverityDecorator();
         if (message != null) {
             if (message.getSeverity() != null) {
-                ConsolePrinter.print(TimeStampMessageDecorator.decorate(message.getBody()) + " " + SeverityDecorator.decorate(message.getSeverity()));
-            } else ConsolePrinter.print(TimeStampMessageDecorator.decorate(message.getBody()));
+                result.print(decor.decorate(severity.decorate(message)));
+            } else result.print(decor.decorate(message));
         }
     }
 
     /**
      * Метод проверяющий наличие сообщения в массиве сообщений
      *
-     * @param message Сообщение, которое проверяем на наличие в массиве
-     * @param array   Массив сообщений, с которым сравниваем
+     * @param message Экземпляр объекта типа Message, которое проверяем на наличие в массиве
+     * @param array   Массив объектов типа Message, с которым сравниваем
      * @return isArrayContainsMessage признак наличия или отсутствия элемента в массиве
      */
     private static boolean isArrayContainsMessage(Message message, Message... array) {

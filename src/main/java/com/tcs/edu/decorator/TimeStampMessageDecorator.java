@@ -1,5 +1,7 @@
 package com.tcs.edu.decorator;
 
+import com.tcs.edu.domain.Message;
+
 import java.time.Instant;
 
 /**
@@ -7,8 +9,7 @@ import java.time.Instant;
  *
  * @author Viktor Artashevich
  */
-
-public class TimeStampMessageDecorator {
+public class TimeStampMessageDecorator implements MessageDecorator {
     public static int messageCount = 0;
     private static final int PAGE_MESSAGE_COUNT = 3;
 
@@ -17,18 +18,17 @@ public class TimeStampMessageDecorator {
      * pageMessageCount.
      * decoratedMessage - константа состоящая из кол-ва выводов сообщений, текущей даты и сообщения<p/>
      *
-     * @param message сообщение, передаваемое для декорирования в виде добавления даты
-     * @return Возвращаем переменную decoratedMessage - результат декорирования сообщения message
+     * @param message Экземпляр объекта типа Message, сообщение, передаваемое для декорирования в виде добавления даты
+     * @return Возвращаем переменную result типа Message - результат декорирования сообщения message
      */
-
-
-    public static String decorate(String message) {
+    public Message decorate(Message message) {
         if (messageCount % PAGE_MESSAGE_COUNT == 0 && messageCount != 0) {
             System.out.println("----------------------------");
         }
         messageCount++;
-
-        final var decoratedMessage = String.format("%d %s %s", messageCount, Instant.now().toString(), message);
-        return decoratedMessage;
+        Message result;
+        final String decoratedMessage = String.format("%d %s %s", messageCount, Instant.now().toString(), message.getBody());
+        result = new Message(decoratedMessage, message.getSeverity());
+        return result;
     }
 }
