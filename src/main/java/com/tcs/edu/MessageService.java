@@ -11,6 +11,14 @@ import com.tcs.edu.helper.MessageOrder;
  */
 public interface MessageService {
     Message[] sortMessages(final MessageOrder order, final Message... processedMessages);
+
     Message[] processMessages(Doubling doubling, Message... allMessages);
 
+
+    void logMessage(Message message, Message... messages);
+
+
+    void logMessage(MessageOrder order, Message message, Message... messages);
+
+    void logMessage(MessageOrder order, Doubling doubling, Message message, Message... messages);
 }

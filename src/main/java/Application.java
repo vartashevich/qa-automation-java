@@ -1,7 +1,11 @@
+import com.tcs.edu.MessageService;
+import com.tcs.edu.decorator.SeverityDecorator;
+import com.tcs.edu.decorator.TimeStampMessageDecorator;
 import com.tcs.edu.domain.Message;
 import com.tcs.edu.helper.Doubling;
 import com.tcs.edu.helper.MessageOrder;
 import com.tcs.edu.helper.Severity;
+import com.tcs.edu.printer.ConsolePrinter;
 import com.tcs.edu.processor.OrderedDistinctedMessageService;
 
 /**
@@ -16,7 +20,7 @@ class Application {
     public static void main(String[] args) {
         Message m1 = new Message("Hello!", Severity.REGULAR);
         Message m2 = new Message("Hello2!", Severity.MAJOR);
-        OrderedDistinctedMessageService service = new OrderedDistinctedMessageService();
+        MessageService service = new OrderedDistinctedMessageService(new ConsolePrinter(), new SeverityDecorator(), new TimeStampMessageDecorator(5));
         service.logMessage(m1);
         service.logMessage(MessageOrder.DESC, Doubling.DOUBLES, m1, m2);
         service.logMessage(MessageOrder.ASC, m2);

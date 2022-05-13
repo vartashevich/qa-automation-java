@@ -10,8 +10,12 @@ import java.time.Instant;
  * @author Viktor Artashevich
  */
 public class TimeStampMessageDecorator implements MessageDecorator {
-    public static int messageCount = 0;
-    private static final int PAGE_MESSAGE_COUNT = 3;
+    public int messageCount = 0;
+    private int pageMessageCount;
+
+    public TimeStampMessageDecorator(int pageMessageCount) {
+        this.pageMessageCount = pageMessageCount;
+    }
 
     /**
      * <p>Метод decorate украшает полученное в аргументе сообщение. Разделяем постранично сообщения в зависимости от
@@ -22,13 +26,11 @@ public class TimeStampMessageDecorator implements MessageDecorator {
      * @return Возвращаем переменную result типа Message - результат декорирования сообщения message
      */
     public Message decorate(Message message) {
-        if (messageCount % PAGE_MESSAGE_COUNT == 0 && messageCount != 0) {
+        if (messageCount % pageMessageCount == 0 && messageCount != 0) {
             System.out.println("----------------------------");
         }
         messageCount++;
-        Message result;
         final String decoratedMessage = String.format("%d %s %s", messageCount, Instant.now().toString(), message.getBody());
-        result = new Message(decoratedMessage, message.getSeverity());
-        return result;
+        return new Message(decoratedMessage, message.getSeverity());
     }
 }

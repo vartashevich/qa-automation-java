@@ -1,11 +1,11 @@
 package com.tcs.edu.processor;
 
-import com.tcs.edu.decorator.SeverityDecorator;
-import com.tcs.edu.decorator.TimeStampMessageDecorator;
+import com.tcs.edu.MessageService;
+import com.tcs.edu.Printer;
+import com.tcs.edu.decorator.MessageDecorator;
 import com.tcs.edu.domain.Message;
 import com.tcs.edu.helper.Doubling;
 import com.tcs.edu.helper.MessageOrder;
-import com.tcs.edu.printer.ConsolePrinter;
 
 /**
  * Created on 13.04.2022
@@ -15,7 +15,15 @@ import com.tcs.edu.printer.ConsolePrinter;
  *
  * @author Viktor Artashevich
  */
-public class OrderedDistinctedMessageService implements com.tcs.edu.MessageService {
+public class OrderedDistinctedMessageService implements MessageService {
+    public Printer printer;
+    public MessageDecorator[] decorators;
+
+    public OrderedDistinctedMessageService(Printer printer, MessageDecorator... decorators) {
+        this.printer = printer;
+        this.decorators = decorators;
+    }
+
     /**
      * Метод обработки сообщений. Вызывает перегруженный метод logMessage.
      * В качестве порядка передаем ASC, который является порядком по умолчанию.
@@ -148,13 +156,13 @@ public class OrderedDistinctedMessageService implements com.tcs.edu.MessageServi
      * @param message Экземпляр объекта типа Message
      */
     private void printMessage(Message message) {
-        ConsolePrinter result = new ConsolePrinter();
-        TimeStampMessageDecorator decor = new TimeStampMessageDecorator();
-        SeverityDecorator severity = new SeverityDecorator();
+        Message decoratedMessage = message;
         if (message != null) {
-            if (message.getSeverity() != null) {
-                result.print(decor.decorate(severity.decorate(message)));
-            } else result.print(decor.decorate(message));
+            for (MessageDecorator decorator :
+                    decorators) {
+                decoratedMessage = decorator.decorate(decoratedMessage);
+            }
+            printer.print(decoratedMessage);
         }
     }
 
