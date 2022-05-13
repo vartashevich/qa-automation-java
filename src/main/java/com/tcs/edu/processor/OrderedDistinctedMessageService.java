@@ -19,6 +19,11 @@ public class OrderedDistinctedMessageService implements MessageService {
     public Printer printer;
     public MessageDecorator[] decorators;
 
+    /**
+     * Конструктор, принимающий в виду параметров интерфейсы принтера и декораторов
+     * @param printer интерфейс принтера
+     * @param decorators список декораторов
+     */
     public OrderedDistinctedMessageService(Printer printer, MessageDecorator... decorators) {
         this.printer = printer;
         this.decorators = decorators;

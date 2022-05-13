@@ -13,6 +13,10 @@ public class TimeStampMessageDecorator implements MessageDecorator {
     public int messageCount = 0;
     private int pageMessageCount;
 
+    /**
+     * Конструктор, принимающий параметр количества сообщений необходимых для разделения
+     * @param pageMessageCount
+     */
     public TimeStampMessageDecorator(int pageMessageCount) {
         this.pageMessageCount = pageMessageCount;
     }
