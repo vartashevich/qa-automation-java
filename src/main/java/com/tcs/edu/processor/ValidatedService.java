@@ -8,9 +8,7 @@ import com.tcs.edu.domain.Message;
  * @author Viktor Artashevich
  */
 public abstract class ValidatedService {
-public boolean isAgsValid(Message message){
-    if (message == null) return false;
-    if (message.toString().isEmpty()) return false;
-    return true;
-}
+    public boolean isAgsValid(Message message) {
+        return message != null && message.getBody()!=null;
+    }
 }

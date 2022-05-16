@@ -15,13 +15,14 @@ import com.tcs.edu.helper.MessageOrder;
  *
  * @author Viktor Artashevich
  */
-public class OrderedDistinctedMessageService implements MessageService {
+public class OrderedDistinctedMessageService extends ValidatedService implements MessageService {
     public Printer printer;
     public MessageDecorator[] decorators;
 
     /**
      * Конструктор, принимающий в виду параметров интерфейсы принтера и декораторов
-     * @param printer интерфейс принтера
+     *
+     * @param printer    интерфейс принтера
      * @param decorators список декораторов
      */
     public OrderedDistinctedMessageService(Printer printer, MessageDecorator... decorators) {
@@ -64,13 +65,10 @@ public class OrderedDistinctedMessageService implements MessageService {
      * @param message  Экземпляр объекта типа Message
      * @param messages массив объектов Message
      */
-    @SuppressWarnings("ConstantConditions")
     public void logMessage(MessageOrder order, Doubling doubling, Message message, Message... messages) {
         Message[] allMessages = new Message[messages.length + 1];
         allMessages[0] = message;
-        if (messages != null) {
-            System.arraycopy(messages, 0, allMessages, 1, messages.length);
-        }
+        System.arraycopy(messages, 0, allMessages, 1, messages.length);
         Message[] processedMessages = processMessages(doubling, allMessages);
         Message[] sortedMessages = sortMessages(order, processedMessages);
         printMessages(sortedMessages);
@@ -85,22 +83,20 @@ public class OrderedDistinctedMessageService implements MessageService {
      */
     public Message[] sortMessages(final MessageOrder order, final Message... processedMessages) {
         Message[] sortedMessages = null;
-        if (processedMessages != null) {
-            switch (order) {
-                case ASC: {
-                    sortedMessages = processedMessages;
-                    break;
-                }
-                case DESC: {
-                    sortedMessages = new Message[processedMessages.length];
-                    for (int i = processedMessages.length - 1, j = 0; i >= 0; i--, j++) {
-                        sortedMessages[j] = processedMessages[i];
-                    }
-                }
+        switch (order) {
+            case ASC: {
+                sortedMessages = processedMessages;
                 break;
-                default: {
-                    sortedMessages = processedMessages;
+            }
+            case DESC: {
+                sortedMessages = new Message[processedMessages.length];
+                for (int i = processedMessages.length - 1, j = 0; i >= 0; i--, j++) {
+                    sortedMessages[j] = processedMessages[i];
                 }
+            }
+            break;
+            default: {
+                sortedMessages = processedMessages;
             }
         }
         return sortedMessages;
@@ -115,27 +111,25 @@ public class OrderedDistinctedMessageService implements MessageService {
      */
     public Message[] processMessages(Doubling doubling, Message... allMessages) {
         Message[] processedMessages = allMessages;
-        if (allMessages != null) {
-            if (doubling != null) {
-                switch (doubling) {
-                    case DOUBLES: {
-                        processedMessages = new Message[allMessages.length * 2];
-                        for (int i = 0; i < allMessages.length; i++) {
-                            processedMessages[i * 2] = allMessages[i];
-                            processedMessages[i * 2 + 1] = allMessages[i];
-                        }
+        if (doubling != null) {
+            switch (doubling) {
+                case DOUBLES: {
+                    processedMessages = new Message[allMessages.length * 2];
+                    for (int i = 0; i < allMessages.length; i++) {
+                        processedMessages[i * 2] = allMessages[i];
+                        processedMessages[i * 2 + 1] = allMessages[i];
                     }
-                    break;
-                    case DISTINCT: {
-                        processedMessages = new Message[allMessages.length];
-                        for (int i = 0; i <= allMessages.length - 1; i++) {
-                            if (!isArrayContainsMessage(allMessages[i], processedMessages)) {
-                                processedMessages[i] = allMessages[i];
-                            }
-                        }
-                    }
-                    break;
                 }
+                break;
+                case DISTINCT: {
+                    processedMessages = new Message[allMessages.length];
+                    for (int i = 0; i <= allMessages.length - 1; i++) {
+                        if (!isArrayContainsMessage(allMessages[i], processedMessages)) {
+                            processedMessages[i] = allMessages[i];
+                        }
+                    }
+                }
+                break;
             }
         }
         return processedMessages;
@@ -148,11 +142,11 @@ public class OrderedDistinctedMessageService implements MessageService {
      * @param additionalMessages массив дополнительных сообщений
      */
     private void printMessages(Message... additionalMessages) {
-        if (additionalMessages != null) {
+
             for (Message current : additionalMessages) {
                 printMessage(current);
             }
-        }
+
     }
 
     /**
@@ -162,7 +156,7 @@ public class OrderedDistinctedMessageService implements MessageService {
      */
     private void printMessage(Message message) {
         Message decoratedMessage = message;
-        if (message != null) {
+        if (super.isAgsValid(message)) {
             for (MessageDecorator decorator :
                     decorators) {
                 decoratedMessage = decorator.decorate(decoratedMessage);

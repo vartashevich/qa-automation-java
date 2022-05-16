@@ -8,6 +8,9 @@ import com.tcs.edu.helper.Severity;
 import com.tcs.edu.printer.ConsolePrinter;
 import com.tcs.edu.processor.OrderedDistinctedMessageService;
 
+import java.util.HashMap;
+import java.util.HashSet;
+
 /**
  * Класс, выступающий входной точкой для тестового приложения
  */
@@ -20,7 +23,8 @@ class Application {
     public static void main(String[] args) {
         Message m1 = new Message("Hello!", Severity.REGULAR);
         Message m2 = new Message("Hello2!", Severity.MAJOR);
-        Message m3 = new Message("Hello!", Severity.REGULAR);
+        Message m3 = new Message("Hello!", Severity.MINOR);
+        Message m4 = new Message("Hello!", Severity.REGULAR);
         MessageService service = new OrderedDistinctedMessageService(new ConsolePrinter(), new SeverityDecorator(), new TimeStampMessageDecorator(5));
         service.logMessage(m1);
         service.logMessage(MessageOrder.DESC, Doubling.DOUBLES, m1, m2);
@@ -30,7 +34,14 @@ class Application {
         service.logMessage(MessageOrder.DESC, Doubling.DISTINCT, m1, m2);
         service.logMessage(MessageOrder.ASC, Doubling.DEFAULT, m1, m2);
         System.out.println(m1.equals(m2));
-        System.out.println(m1.equals(m3));
+        System.out.println(m1.equals(m4));
         System.out.println(m1.hashCode());
+        service.logMessage(MessageOrder.DESC, Doubling.DOUBLES, m1);
+        HashSet<Message> hashSet = new HashSet<>();
+        hashSet.add(m1);
+        hashSet.add(m3);
+        hashSet.add(m4);
+        System.out.println(hashSet);
+
     }
 }
