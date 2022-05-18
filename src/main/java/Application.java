@@ -20,7 +20,7 @@ class Application {
      *
      * @param args аргументы командной строки передаваемые строками
      */
-    public static void main(String[] args) throws LogException {
+    public static void main(String[] args) {
         Message m1 = new Message("Hello!", Severity.REGULAR);
         Message m2 = new Message("Hello2!", Severity.MAJOR);
         Message m3 = new Message("Hello!", Severity.MINOR);
@@ -44,7 +44,15 @@ class Application {
         hashSet.add(m3);
         hashSet.add(m4);
         System.out.println(hashSet);
-        service.logMessage(m5);
-        service.logMessage(m6);
+        try {
+            service.logMessage(m5);
+        } catch (LogException e) {
+            e.printStackTrace();
+        }
+        try {
+            service.logMessage(m6);
+        } catch (LogException e) {
+            e.printStackTrace();
+        }
     }
 }

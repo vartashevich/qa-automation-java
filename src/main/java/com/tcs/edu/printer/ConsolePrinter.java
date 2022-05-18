@@ -23,7 +23,7 @@ public class ConsolePrinter extends ValidatedService implements Printer {
             super.checkAgsValid(message);
             System.out.println(message.getBody());
         } catch (IllegalArgumentException e) {
-            throw new LogException("notValidArgMessage", e);
+            throw new LogException("Невалидный параметр", e);
         }
     }
 }

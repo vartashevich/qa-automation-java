@@ -15,10 +15,10 @@ public abstract class ValidatedService {
      */
     public void checkAgsValid(Message message) {
         if (message == null) {
-            throw new IllegalArgumentException("arg message is null");
+            throw new IllegalArgumentException("Передан пустой объект");
         }
         if (message.getBody() == null) {
-            throw new IllegalArgumentException("some arg is empty");
+            throw new IllegalArgumentException("Тело Сообщения пустое");
         }
     }
 }

@@ -163,7 +163,7 @@ public class OrderedDistinctedMessageService extends ValidatedService implements
             }
             printer.print(decoratedMessage);
         } catch (IllegalArgumentException e) {
-            throw new LogException("notValidArgMessage", e);
+            throw new LogException("Невалидный параметр", e);
         }
     }
 
