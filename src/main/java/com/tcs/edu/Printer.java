@@ -8,5 +8,5 @@ import com.tcs.edu.domain.Message;
  * @author Viktor Artashevich
  */
 public interface Printer {
-    void print(Message decoratedMessage);
+    void print(Message decoratedMessage) throws LogException;
 }

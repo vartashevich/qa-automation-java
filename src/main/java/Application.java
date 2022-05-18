@@ -1,3 +1,4 @@
+import com.tcs.edu.LogException;
 import com.tcs.edu.MessageService;
 import com.tcs.edu.decorator.SeverityDecorator;
 import com.tcs.edu.decorator.TimeStampMessageDecorator;
@@ -8,7 +9,6 @@ import com.tcs.edu.helper.Severity;
 import com.tcs.edu.printer.ConsolePrinter;
 import com.tcs.edu.processor.OrderedDistinctedMessageService;
 
-import java.util.HashMap;
 import java.util.HashSet;
 
 /**
@@ -20,11 +20,13 @@ class Application {
      *
      * @param args аргументы командной строки передаваемые строками
      */
-    public static void main(String[] args) {
+    public static void main(String[] args) throws LogException {
         Message m1 = new Message("Hello!", Severity.REGULAR);
         Message m2 = new Message("Hello2!", Severity.MAJOR);
         Message m3 = new Message("Hello!", Severity.MINOR);
         Message m4 = new Message("Hello!", Severity.REGULAR);
+        Message m5 = new Message(null, Severity.REGULAR);
+        Message m6 = null;
         MessageService service = new OrderedDistinctedMessageService(new ConsolePrinter(), new SeverityDecorator(), new TimeStampMessageDecorator(5));
         service.logMessage(m1);
         service.logMessage(MessageOrder.DESC, Doubling.DOUBLES, m1, m2);
@@ -42,6 +44,7 @@ class Application {
         hashSet.add(m3);
         hashSet.add(m4);
         System.out.println(hashSet);
-
+        service.logMessage(m5);
+        service.logMessage(m6);
     }
 }

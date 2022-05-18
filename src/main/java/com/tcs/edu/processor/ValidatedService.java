@@ -8,7 +8,17 @@ import com.tcs.edu.domain.Message;
  * @author Viktor Artashevich
  */
 public abstract class ValidatedService {
-    public boolean isAgsValid(Message message) {
-        return message != null && message.getBody()!=null;
+    /**
+     * Метод проверяет параметры на валидность
+     *
+     * @param message Сообщение
+     */
+    public void checkAgsValid(Message message) {
+        if (message == null) {
+            throw new IllegalArgumentException("arg message is null");
+        }
+        if (message.getBody() == null) {
+            throw new IllegalArgumentException("some arg is empty");
+        }
     }
 }

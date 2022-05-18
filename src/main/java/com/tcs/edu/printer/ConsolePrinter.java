@@ -1,24 +1,29 @@
 package com.tcs.edu.printer;
 
+import com.tcs.edu.LogException;
 import com.tcs.edu.Printer;
 import com.tcs.edu.domain.Message;
 import com.tcs.edu.processor.ValidatedService;
 
 /**
- * Class contains method for printing message to console
+ * Класс содержит метод для печати сообщения в консоль
  *
  * @author Artashevich Viktor
  */
 public class ConsolePrinter extends ValidatedService implements Printer {
     /**
-     * Prints the message
-     * No side-effects
+     * Метод печатает сообщение
+     * Нет побочных эффектов
      *
-     * @param message the message to be printed
+     * @param message Сообщение, которое необходимо напечатать
+     * @throws выбрасывает исключение типа LogException при IAE
      */
-    public void print(Message message) {
-        if (super.isAgsValid(message)) {
+    public void print(Message message) throws LogException {
+        try {
+            super.checkAgsValid(message);
             System.out.println(message.getBody());
+        } catch (IllegalArgumentException e) {
+            throw new LogException("notValidArgMessage", e);
         }
     }
 }
