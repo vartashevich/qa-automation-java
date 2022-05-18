@@ -1,5 +1,6 @@
 package com.tcs.edu.processor;
 
+import com.tcs.edu.LogException;
 import com.tcs.edu.MessageService;
 import com.tcs.edu.Printer;
 import com.tcs.edu.decorator.MessageDecorator;
@@ -38,7 +39,7 @@ public class OrderedDistinctedMessageService extends ValidatedService implements
      * @param message  Экземпляр объекта типа Message
      * @param messages массив объектов Message
      */
-    public void logMessage(Message message, Message... messages) {
+    public void logMessage(Message message, Message... messages) throws LogException {
         logMessage(MessageOrder.ASC, message, messages);
     }
 
@@ -51,7 +52,7 @@ public class OrderedDistinctedMessageService extends ValidatedService implements
      * @param message  Экземпляр объекта типа Message
      * @param messages массив объектов Message
      */
-    public void logMessage(MessageOrder order, Message message, Message... messages) {
+    public void logMessage(MessageOrder order, Message message, Message... messages) throws LogException {
         logMessage(order, Doubling.DEFAULT, message, messages);
     }
 
@@ -65,7 +66,7 @@ public class OrderedDistinctedMessageService extends ValidatedService implements
      * @param message  Экземпляр объекта типа Message
      * @param messages массив объектов Message
      */
-    public void logMessage(MessageOrder order, Doubling doubling, Message message, Message... messages) {
+    public void logMessage(MessageOrder order, Doubling doubling, Message message, Message... messages) throws LogException {
         Message[] allMessages = new Message[messages.length + 1];
         allMessages[0] = message;
         System.arraycopy(messages, 0, allMessages, 1, messages.length);
@@ -141,12 +142,10 @@ public class OrderedDistinctedMessageService extends ValidatedService implements
      * @param severity           Уровень важности сообщения
      * @param additionalMessages массив дополнительных сообщений
      */
-    private void printMessages(Message... additionalMessages) {
-
-            for (Message current : additionalMessages) {
-                printMessage(current);
-            }
-
+    private void printMessages(Message... additionalMessages) throws LogException {
+        for (Message current : additionalMessages) {
+            printMessage(current);
+        }
     }
 
     /**
@@ -154,14 +153,17 @@ public class OrderedDistinctedMessageService extends ValidatedService implements
      *
      * @param message Экземпляр объекта типа Message
      */
-    private void printMessage(Message message) {
+    private void printMessage(Message message) throws LogException {
         Message decoratedMessage = message;
-        if (super.isAgsValid(message)) {
+        try {
+            super.checkAgsValid(message);
             for (MessageDecorator decorator :
                     decorators) {
                 decoratedMessage = decorator.decorate(decoratedMessage);
             }
             printer.print(decoratedMessage);
+        } catch (IllegalArgumentException e) {
+            throw new LogException("Невалидный параметр", e);
         }
     }
 

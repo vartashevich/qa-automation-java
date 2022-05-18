@@ -28,25 +28,28 @@ public interface MessageService {
 
     /**
      * Метод обработки сообщений
-     * @param message сообщение
+     *
+     * @param message  сообщение
      * @param messages список сообщений
      */
-    void logMessage(Message message, Message... messages);
+    void logMessage(Message message, Message... messages) throws LogException;
 
     /**
      * Метод обработки сообщений
-     * @param order порядок
-     * @param message сообщение
+     *
+     * @param order    порядок
+     * @param message  сообщение
      * @param messages список сообщений
      */
-    void logMessage(MessageOrder order, Message message, Message... messages);
+    void logMessage(MessageOrder order, Message message, Message... messages) throws LogException;
 
     /**
      * Метод обработки сообщений
-     * @param order порядок
+     *
+     * @param order    порядок
      * @param doubling вариант обработки
-     * @param message сообщение
+     * @param message  сообщение
      * @param messages список сообщений
      */
-    void logMessage(MessageOrder order, Doubling doubling, Message message, Message... messages);
+    void logMessage(MessageOrder order, Doubling doubling, Message message, Message... messages) throws LogException;
 }
