@@ -6,7 +6,7 @@ package com.tcs.edu;
  *
  * @author Viktor Artashevich
  */
-public class LogException extends RuntimeException {
+public class LogException extends Exception {
     public LogException() {
         super();
     }

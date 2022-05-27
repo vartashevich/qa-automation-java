@@ -3,6 +3,10 @@ package com.tcs.edu;
 import com.tcs.edu.domain.Message;
 import com.tcs.edu.helper.Doubling;
 import com.tcs.edu.helper.MessageOrder;
+import com.tcs.edu.helper.Severity;
+
+import java.util.Collection;
+import java.util.UUID;
 
 /**
  * Created on 06.05.2022
@@ -52,4 +56,19 @@ public interface MessageService {
      * @param messages список сообщений
      */
     void logMessage(MessageOrder order, Doubling doubling, Message message, Message... messages) throws LogException;
+
+    /**
+     * Метод поиска записи по идентификатору
+     */
+    Message findByPrimaryKey(UUID key);
+
+    /**
+     * Метод поиска всех записей в памяти
+     */
+    Collection<Message> findAll();
+
+    /**
+     * Метод поиска записей по уровню важности
+     */
+    Collection<Message> findBySeverity(Severity by);
 }
