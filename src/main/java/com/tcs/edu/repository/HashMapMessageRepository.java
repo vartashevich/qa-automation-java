@@ -17,7 +17,7 @@ import java.util.stream.Collectors;
  * @author Viktor Artashevich
  */
 public class HashMapMessageRepository extends ValidatedService implements MessageRepository {
-    HashMap<UUID, Message> hashMapMessages = new HashMap<>();
+    private final HashMap<UUID, Message> hashMapMessages = new HashMap<>();
 
     /**
      * Метод по добавлению Сообщения в память
@@ -31,7 +31,6 @@ public class HashMapMessageRepository extends ValidatedService implements Messag
             super.checkAgsValid(message);
             message.setId(uuid);
             hashMapMessages.put(uuid, message);
-            System.out.println(hashMapMessages.values());
             return uuid;
         } catch (IllegalArgumentException e) {
             throw new LogException("Невалидный параметр", e);
