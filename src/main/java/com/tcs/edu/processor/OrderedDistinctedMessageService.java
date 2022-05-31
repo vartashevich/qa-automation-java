@@ -2,39 +2,35 @@ package com.tcs.edu.processor;
 
 import com.tcs.edu.LogException;
 import com.tcs.edu.MessageService;
-import com.tcs.edu.Printer;
-import com.tcs.edu.decorator.MessageDecorator;
 import com.tcs.edu.domain.Message;
 import com.tcs.edu.helper.Doubling;
 import com.tcs.edu.helper.MessageOrder;
+import com.tcs.edu.helper.Severity;
+import com.tcs.edu.repository.HashMapMessageRepository;
+import com.tcs.edu.repository.MessageRepository;
+
+import java.util.Collection;
+import java.util.UUID;
 
 /**
  * Created on 13.04.2022
  * Класс для обработки сообщений.
  * Содержит перегруженные методы для обработки сообщений, методы сортировки и обработки сообщений,
- * а также вывода на экран.
+ * а также сохранения в памяти.
  *
  * @author Viktor Artashevich
  */
 public class OrderedDistinctedMessageService extends ValidatedService implements MessageService {
-    public Printer printer;
-    public MessageDecorator[] decorators;
+    public MessageRepository repository;
 
-    /**
-     * Конструктор, принимающий в виду параметров интерфейсы принтера и декораторов
-     *
-     * @param printer    интерфейс принтера
-     * @param decorators список декораторов
-     */
-    public OrderedDistinctedMessageService(Printer printer, MessageDecorator... decorators) {
-        this.printer = printer;
-        this.decorators = decorators;
+    public OrderedDistinctedMessageService(HashMapMessageRepository repository) {
+        this.repository = repository;
     }
 
     /**
      * Метод обработки сообщений. Вызывает перегруженный метод logMessage.
      * В качестве порядка передаем ASC, который является порядком по умолчанию.
-     * В результате печатаются обработанные сообщения.
+     * В результате обработанные сообщения добавляются в память.
      *
      * @param message  Экземпляр объекта типа Message
      * @param messages массив объектов Message
@@ -46,9 +42,9 @@ public class OrderedDistinctedMessageService extends ValidatedService implements
     /**
      * Метод обработки сообщений. Вызывает перегруженный метод logMessage.
      * В качестве варианта обработки передаем DEFAULT, который является обработкой по умолчанию.
-     * В результате печатаются обработанные сообщения.
+     * В результате обработанные сообщения добавляются в память.
      *
-     * @param order    порядок вывода сообщений из массива дополнительных сообщений
+     * @param order    порядок сообщений из массива дополнительных сообщений
      * @param message  Экземпляр объекта типа Message
      * @param messages массив объектов Message
      */
@@ -58,10 +54,9 @@ public class OrderedDistinctedMessageService extends ValidatedService implements
 
     /**
      * Метод обработки сообщений. Сначала обрабатываем сообщения в зависимости от варианта Doubling,
-     * потом сортируем полученный массив. Затем печатаем уже отсортированный массив.
-     * В результате печатаются обработанные сообщения.
+     * потом сортируем полученный массив. Затем добавляем в память уже отсортированный массив.
      *
-     * @param order    enum порядка вывода сообщений из массива дополнительных сообщений
+     * @param order    enum порядка сообщений из массива дополнительных сообщений
      * @param doubling enum с вариантами обработки сообщений
      * @param message  Экземпляр объекта типа Message
      * @param messages массив объектов Message
@@ -72,7 +67,9 @@ public class OrderedDistinctedMessageService extends ValidatedService implements
         System.arraycopy(messages, 0, allMessages, 1, messages.length);
         Message[] processedMessages = processMessages(doubling, allMessages);
         Message[] sortedMessages = sortMessages(order, processedMessages);
-        printMessages(sortedMessages);
+        for (Message current : sortedMessages) {
+            repository.create(current);
+        }
     }
 
     /**
@@ -137,37 +134,6 @@ public class OrderedDistinctedMessageService extends ValidatedService implements
     }
 
     /**
-     * Метод печатает сообщения, которые были переданы в массиве
-     *
-     * @param severity           Уровень важности сообщения
-     * @param additionalMessages массив дополнительных сообщений
-     */
-    private void printMessages(Message... additionalMessages) throws LogException {
-        for (Message current : additionalMessages) {
-            printMessage(current);
-        }
-    }
-
-    /**
-     * Метод печатает обработанное сообщение
-     *
-     * @param message Экземпляр объекта типа Message
-     */
-    private void printMessage(Message message) throws LogException {
-        Message decoratedMessage = message;
-        try {
-            super.checkAgsValid(message);
-            for (MessageDecorator decorator :
-                    decorators) {
-                decoratedMessage = decorator.decorate(decoratedMessage);
-            }
-            printer.print(decoratedMessage);
-        } catch (IllegalArgumentException e) {
-            throw new LogException("Невалидный параметр", e);
-        }
-    }
-
-    /**
      * Метод проверяющий наличие сообщения в массиве сообщений
      *
      * @param message Экземпляр объекта типа Message, которое проверяем на наличие в массиве
@@ -185,5 +151,34 @@ public class OrderedDistinctedMessageService extends ValidatedService implements
             }
         }
         return isArrayContainsMessage;
+    }
+
+    /**
+     * Метод поиска записи по идентификатору. Делегирует выполнение методу репозитория.
+     *
+     * @param key идентификатор записи
+     * @return запись соответствующую ключу-идентификатору
+     */
+    public Message findByPrimaryKey(UUID key) {
+        return repository.findByPrimaryKey(key);
+    }
+
+    /**
+     * Метод поиска всех записей. Делегирует выполнение методу репозитория.
+     *
+     * @return возвращает все записи
+     */
+    public Collection<Message> findAll() {
+        return repository.findAll();
+    }
+
+    /**
+     * Метод поиска записи по уровню важности. Делегирует выполнение методу репозитория.
+     *
+     * @param by уровень важности сообщения
+     * @return возвращает запись, соответствующую уровню важности
+     */
+    public Collection<Message> findBySeverity(Severity by) {
+        return repository.findBySeverity(by);
     }
 }

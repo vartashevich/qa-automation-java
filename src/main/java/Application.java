@@ -1,15 +1,12 @@
 import com.tcs.edu.LogException;
-import com.tcs.edu.MessageService;
-import com.tcs.edu.decorator.SeverityDecorator;
-import com.tcs.edu.decorator.TimeStampMessageDecorator;
 import com.tcs.edu.domain.Message;
 import com.tcs.edu.helper.Doubling;
 import com.tcs.edu.helper.MessageOrder;
 import com.tcs.edu.helper.Severity;
-import com.tcs.edu.printer.ConsolePrinter;
 import com.tcs.edu.processor.OrderedDistinctedMessageService;
+import com.tcs.edu.repository.HashMapMessageRepository;
 
-import java.util.HashSet;
+import java.util.UUID;
 
 /**
  * Класс, выступающий входной точкой для тестового приложения
@@ -23,36 +20,25 @@ class Application {
     public static void main(String[] args) {
         Message m1 = new Message("Hello!", Severity.REGULAR);
         Message m2 = new Message("Hello2!", Severity.MAJOR);
-        Message m3 = new Message("Hello!", Severity.MINOR);
-        Message m4 = new Message("Hello!", Severity.REGULAR);
-        Message m5 = new Message(null, Severity.REGULAR);
-        Message m6 = null;
-        MessageService service = new OrderedDistinctedMessageService(new ConsolePrinter(), new SeverityDecorator(), new TimeStampMessageDecorator(5));
-        service.logMessage(m1);
-        service.logMessage(MessageOrder.DESC, Doubling.DOUBLES, m1, m2);
-        service.logMessage(MessageOrder.ASC, m2);
-        service.logMessage(MessageOrder.ASC, m1, m2);
-        service.logMessage(MessageOrder.DESC, Doubling.DOUBLES, m1, m2);
-        service.logMessage(MessageOrder.DESC, Doubling.DISTINCT, m1, m2);
-        service.logMessage(MessageOrder.ASC, Doubling.DEFAULT, m1, m2);
-        System.out.println(m1.equals(m2));
-        System.out.println(m1.equals(m4));
-        System.out.println(m1.hashCode());
-        service.logMessage(MessageOrder.DESC, Doubling.DOUBLES, m1);
-        HashSet<Message> hashSet = new HashSet<>();
-        hashSet.add(m1);
-        hashSet.add(m3);
-        hashSet.add(m4);
-        System.out.println(hashSet);
+        Message m3 = new Message("Hello3!", Severity.MAJOR);
+        Message m4 = null;
+        OrderedDistinctedMessageService service = new OrderedDistinctedMessageService(
+                new HashMapMessageRepository()
+        );
         try {
-            service.logMessage(m5);
+            service.logMessage(m1);
+            service.logMessage(MessageOrder.DESC, Doubling.DOUBLES, m2);
+            service.logMessage(m3);
+            service.logMessage(m4);
         } catch (LogException e) {
             e.printStackTrace();
         }
-        try {
-            service.logMessage(m6);
-        } catch (LogException e) {
-            e.printStackTrace();
-        }
+        final UUID key = m2.getId();
+        System.out.println("________________________");
+        System.out.println(service.findAll());
+        System.out.println(key);
+        System.out.println(service.findByPrimaryKey(key));
+        System.out.println("________________");
+        System.out.println(service.findBySeverity(Severity.MAJOR));
     }
 }

@@ -3,16 +3,19 @@ package com.tcs.edu.domain;
 import com.tcs.edu.helper.Severity;
 
 import java.util.Objects;
+import java.util.UUID;
 
 /**
  * Created on 27.04.2022
- * Класс Message отвечает за поля severity и body (строковое сообщение)
+ * Класс Message отвечает за поля severity и body (строковое сообщение). Содержит идентификатор записи
+ * сообщения в памяти
  *
  * @author Viktor Artashevich
  */
 public class Message {
     final private String body;
     final private Severity severity;
+    private UUID id;
 
     public Message(String body) {
         this.body = body;
@@ -57,5 +60,13 @@ public class Message {
                 "body='" + body + '\'' +
                 ", severity=" + severity +
                 '}';
+    }
+
+    public UUID getId() {
+        return id;
+    }
+
+    public void setId(UUID id) {
+        this.id = id;
     }
 }
