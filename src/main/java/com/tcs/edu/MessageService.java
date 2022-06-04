@@ -58,7 +58,7 @@ public interface MessageService {
     void logMessage(MessageOrder order, Doubling doubling, Message message, Message... messages) throws LogException;
 
     /**
-     * Метод поиска записи по идентификатору
+     * Метод поиска записи по идентификатору. Если сообщения с таким ключем нет, то вернем null.
      */
     Message findByPrimaryKey(UUID key);
 
@@ -68,7 +68,7 @@ public interface MessageService {
     Collection<Message> findAll();
 
     /**
-     * Метод поиска записей по уровню важности
+     * Метод поиска записей по уровню важности. Если сообщения с такой важностью нет, то вернем пустую коллекцию.
      */
     Collection<Message> findBySeverity(Severity by);
 }

@@ -39,7 +39,7 @@ public class HashMapMessageRepository extends ValidatedService implements Messag
 
     @Override
     /**
-     * Метод поиска записи по идентификатору
+     * Метод поиска записи по идентификатору. Если сообщения с таким ключем нет, то вернем null.
      */
     public Message findByPrimaryKey(UUID key) {
         return hashMapMessages.get(key);
@@ -54,10 +54,10 @@ public class HashMapMessageRepository extends ValidatedService implements Messag
     }
 
     /**
-     * Метод поиска записей по уровню важности
+     * Метод поиска записей по уровню важности.  Если сообщения с такой важностью нет, то вернем пустую коллекцию.
      *
      * @param by параметр важности сообщения
-     * @return возвращает записи соответствующие уровню важности
+     * @return возвращает коллекцию записей соответствующих уровню важности
      */
     @Override
     public Collection<Message> findBySeverity(Severity by) {
