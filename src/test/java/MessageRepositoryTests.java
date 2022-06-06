@@ -3,7 +3,7 @@ import com.tcs.edu.domain.Message;
 import com.tcs.edu.helper.Severity;
 import com.tcs.edu.processor.OrderedDistinctedMessageService;
 import com.tcs.edu.repository.HashMapMessageRepository;
-import org.junit.jupiter.api.Assertions;
+import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
@@ -13,6 +13,7 @@ import java.util.UUID;
 /**
  * Created on 01.06.2022
  * Класс с тестами поиска Сообщений
+ *
  * @author Viktor Artashevich
  */
 @Nested
@@ -30,50 +31,38 @@ public class MessageRepositoryTests {
     @Nested
     public class FindMessageByKey {
         @Test
-        public void findMessageByCorrectKey() {
+        public void findMessageByCorrectKey() throws LogException {
             //region Act
-            try {
-                service.logMessage(m1);
-            } catch (LogException e) {
-                e.printStackTrace();
-            }
+            service.logMessage(m1);
             final UUID key = m1.getId();
             //endregion
             //region Then
-            Assertions.assertTrue(m1.equals(service.findByPrimaryKey(key)));
+            Assertions.assertThat(m1.equals(service.findByPrimaryKey(key))).isTrue();
             //endregion
         }
 
         @Test
-        public void findMessageByWrongKey() {
+        public void findMessageByWrongKey() throws LogException {
             //region Act
-            try {
-                service.logMessage(m1);
-            } catch (LogException e) {
-                e.printStackTrace();
-            }
+            service.logMessage(m1);
             final UUID key = UUID.randomUUID();
             //endregion
             //region Then
-            Assertions.assertFalse(m1.equals(service.findByPrimaryKey(key)));
+            Assertions.assertThat(service.findByPrimaryKey(key)).isNull();
             //endregion
         }
     }
 
     @Test
-    public void findAllMessages() {
+    public void findAllMessages() throws LogException {
         //region Given
         Message m2 = new Message("Hello!", Severity.MINOR);
         //endregion
         //region Act
-        try {
-            service.logMessage(m1);
-            service.logMessage(m2);
-        } catch (LogException e) {
-            e.printStackTrace();
-        }
+        service.logMessage(m1);
+        service.logMessage(m2);
         //region Then
-        org.assertj.core.api.Assertions.assertThat(service.findAll()).contains(m1)
+        Assertions.assertThat(service.findAll()).contains(m1)
                 .contains(m2)
                 .hasSize(2);
         //endregion
@@ -82,41 +71,33 @@ public class MessageRepositoryTests {
     @Nested
     public class FindMessagesBySeverity {
         @Test
-        public void findMessageByExistedSeverity() {
+        public void findMessageByExistedSeverity() throws LogException {
             //region Given
             Message m2 = new Message("Hello!", Severity.MAJOR);
             Message m3 = new Message("Hello!", Severity.MAJOR);
             //endregion
             //region Act
-            try {
-                service.logMessage(m1);
-                service.logMessage(m2);
-                service.logMessage(m3);
-            } catch (LogException e) {
-                e.printStackTrace();
-            }
+            service.logMessage(m1);
+            service.logMessage(m2);
+            service.logMessage(m3);
             //endregion
             //region Then
-            org.assertj.core.api.Assertions.assertThat(service.findBySeverity(Severity.MAJOR)).
+            Assertions.assertThat(service.findBySeverity(Severity.MAJOR)).
                     containsExactlyInAnyOrder(m2, m3);
             //endregion
         }
 
         @Test
-        public void findMessageByNotExistedSeverity() {
+        public void findMessageByNotExistedSeverity() throws LogException {
             //region Given
             Message m2 = new Message("Hello!", Severity.MAJOR);
             //endregion
             //region Act
-            try {
-                service.logMessage(m1);
-                service.logMessage(m2);
-            } catch (LogException e) {
-                e.printStackTrace();
-            }
+            service.logMessage(m1);
+            service.logMessage(m2);
             //endregion
             //region Then
-            org.assertj.core.api.Assertions.assertThat(service.findBySeverity(Severity.MINOR)).isEmpty();
+            Assertions.assertThat(service.findBySeverity(Severity.MINOR)).isEmpty();
             //endregion
         }
     }

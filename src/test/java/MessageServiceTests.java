@@ -13,6 +13,7 @@ import org.junit.jupiter.api.Test;
 /**
  * Created on 01.06.2022
  * Класс с тестами обработки Сообщений
+ *
  * @author Viktor Artashevich
  */
 public class MessageServiceTests {
@@ -29,15 +30,26 @@ public class MessageServiceTests {
     @Nested
     public class DoubleMessageTest {
         @Test
-        public void doubleMessageTest() {
+        public void doubleNullMessageTest() throws LogException {
             //region Act
-            try {
-                service.logMessage(MessageOrder.ASC, Doubling.DOUBLES, m1);
-            } catch (LogException e) {
-                e.printStackTrace();
-            }
+            service.logMessage(MessageOrder.ASC, Doubling.DOUBLES, m1);
             //endregion
-            //region
+            //region Then
+            //   Assertions.assertThat(service.findAll()).containsExactlyInAnyOrder(m1, m1);
+            Assertions.assertThatThrownBy(() -> {
+                        service.logMessage(null);
+                    })
+                    .hasMessage("Невалидный параметр")
+                    .isInstanceOf(LogException.class);
+            //endregion
+        }
+
+        @Test
+        public void doubleNotNullMessageTest() throws LogException {
+            //region Act
+            service.logMessage(MessageOrder.ASC, Doubling.DOUBLES, m1);
+            //endregion
+            //region Then
             Assertions.assertThat(service.findAll()).containsExactlyInAnyOrder(m1, m1);
             //endregion
         }
@@ -46,15 +58,11 @@ public class MessageServiceTests {
     @Nested
     public class DistinctMessageTest {
         @Test
-        public void distinctMessageTest() {
+        public void distinctMessageTest() throws LogException {
             //region Act
-            try {
-                service.logMessage(MessageOrder.ASC, Doubling.DISTINCT, m1);
-            } catch (LogException e) {
-                e.printStackTrace();
-            }
+            service.logMessage(MessageOrder.ASC, Doubling.DISTINCT, m1);
             //endregion
-            //region
+            //region Then
             Assertions.assertThat(service.findAll()).containsExactlyInAnyOrder(m1);
             //endregion
         }
@@ -63,15 +71,11 @@ public class MessageServiceTests {
     @Nested
     public class DefaultMessageTest {
         @Test
-        public void defaultMessageTest() {
+        public void defaultMessageTest() throws LogException {
             //region Act
-            try {
-                service.logMessage(MessageOrder.ASC, Doubling.DEFAULT, m1);
-            } catch (LogException e) {
-                e.printStackTrace();
-            }
+            service.logMessage(MessageOrder.ASC, Doubling.DEFAULT, m1);
             //endregion
-            //region
+            //region Then
             Assertions.assertThat(service.findAll()).containsExactlyInAnyOrder(m1);
             //endregion
         }
