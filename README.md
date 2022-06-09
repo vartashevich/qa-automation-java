@@ -191,25 +191,36 @@ Java Application Development <sup>9</sup>
 ### Type operators <sup>0.1</sup>
 - [ ] Auto type casting
 - [ ] type casting operator
+- [ ] Method overloading recap
 
 ### Arithmetics operators <sup>0.1</sup>
 - [ ] `+, -, *, /, %`
+- [ ] `ArithmeticException` for integer types
 - [ ] Typed operators: 1/3 vs 1./3
-- [ ] `ArithmeticException`
+- [ ] `+` as String concatenation 
+
+### Arithmetics type issues
+- [ ] Overflow
+- [ ] Precision loss
 
 ### Logical operators <sup>0.3</sup>
 - [ ] Type-safe
 - [ ] `&, |, !`
 - [ ] Lazy and eager form: `&&, ||`
 - [ ] `==, !=, <, <=, >, >=`
-- [ ] Reference types equality issue: absence of `===` and `.equals()`
+- [ ] Reference types equality issue: absence of `===` and `.equals()` instead
 
 ### Switching <sup>0.5</sup>
-- [ ] `if`
 - [ ] Ternary operator
+- [ ] `if`
 - [ ] `switch` and its limitations
 
 ---
+
+### Enums <sup>0.2</sup>
+- [ ] Enumerated type concept: why?
+- [ ] API
+- [ ] Using with `switch`
 
 ### Looping <sup>0.5</sup>
 - [ ] `for`
@@ -223,28 +234,27 @@ Java Application Development <sup>9</sup>
 - [ ] Using
 - [ ] Limitations
 
-### Reference types <sup>0.4</sup>
-- [ ] Reference: why?
-- [ ] What types are references?
-- [ ] Stack and heap
-- [ ] Garbage collection concept
-- [ ] `null` literal value
-- [ ] `final` issue with reference types
-- [ ] Immutable types vs `final`
-
 ---
 
-### Enums <sup>0.2</sup>
-- [ ] Enumerated type concept: why?
-- [ ] API
-- [ ] Using with `switch`
+### Reference types <sup>0.4</sup>
+- [ ] Custom (non-primitive) types
+- Enum
+- Interface
+- Class
+- [ ] Class as structure template
+- [ ] Reference anatomy and `new` operator
+- [ ] Stack and heap
+- [ ] Garbage collection concept
+- [ ] `null` literal value and NPE
+- [ ] `final` issue with reference types
+- [ ] Immutable types vs `final`
 
 ### Arrays <sup>0.3</sup>
 - [ ] Declaration
 - [ ] Initialization
 - empty
 - literals
-- [ ] "Immutability"
+- [ ] "Immutability" with size
 - [ ] API: indexing operator, length
 - [ ] Exceptions
 - [ ] `foreach` loop
@@ -255,6 +265,7 @@ Java Application Development <sup>9</sup>
 - [ ] Initialization with literal and constructor
 - [ ] Strings equality: `==` vs `.equals()`
 - [ ] `String` API
+- [ ] Immutability
 
 ### Wrappers <sup>0.2</sup>
 - [ ] Wrapper types: why?
@@ -262,15 +273,20 @@ Java Application Development <sup>9</sup>
 - [ ] Wrappers API
 - [ ] Autoboxing/unboxing and performance issue
 
+### Immutability <sup>0.1</sup>
+- [ ] Why immutability?
+
 ---
 
 ### Custom Type Objects <sup>0.5</sup>
 - [ ] Objects: why?
+- [ ] Class: why?
 - [ ] Object/instance variable declaration scope
 - [ ] Object/instance method declaration scope
 - [ ] Encapsulation and visibility modifiers
 - [ ] Encapsulated state accessors and mutators
 - [ ] Immutable objects
+- [ ] VO/DTO patterns
 
 ### Creating objects <sup>0.2</sup>
 - [ ] Object creation with `new`
@@ -283,7 +299,18 @@ Java Application Development <sup>9</sup>
 - [ ] Interfaces
 - [ ] Implementing interfaces
 
+### DI *
+- [ ] DI: Why?
+- [ ] Constructor Injection implementation
+
 ---
+
+### OOAD recap with JDBC example
+- [ ] Encapsulation
+- [ ] Polymorphism
+- [ ] Creator DP
+- [ ] Factory Method DP
+- [ ] DI DP
 
 ### Defender methods concept <sup>0.1</sup>
 - [ ] Defender methods: why?
@@ -360,14 +387,15 @@ Developing autotests with JUnit <sup>1</sup>
 -------------------------------
 
 ### JUnit framework overview <sup>0.1</sup>
-- [ ] Task flow
+- [ ] Maven test dependency for JUnit5 Jupiter 
+- [ ] JUnit is a Framework 
 - [ ] Test class and methods
 - [ ] Annotations
-- [ ] Assertions
+- [ ] Built-in Assertions
 
 ### Test design <sup>0.4</sup>
 - [ ] Test Case and Test method naming
-- [ ] Code path
+- [ ] Code execution path
 - [ ] Input and State
 - [ ] Fixture
 - [ ] Test structure
@@ -386,16 +414,16 @@ Developing autotests with JUnit <sup>1</sup>
 - [ ] JUnit5 `assertThrows`
 
 ### Advanced assertions <sup>0.1</sup>
-- [ ] JUnit assertions combinator
-- [ ] AssertJ library
-- [ ] Hamcrest library
+- [ ] [JUnit assertions combinator `assertAll`](https://www.javaguides.net/2018/09/junit-5-assertall-example.html)
+- [x] [Hamcrest matchers library](http://hamcrest.org/JavaHamcrest/tutorial)
+- [x] [AssertJ fluent API library](https://assertj.github.io/doc/)
 
 ### Advanced JUnit <sup>0.1</sup>
-- [ ] Parameterized tests
-- [ ] Suites
-- Nested test classes
+- [x] Suites
+- [Nested test classes](https://junit.org/junit5/docs/current/user-guide/#writing-tests-nested)
 - [Test suites](https://junit.org/junit5/docs/current/user-guide/#running-tests-junit-platform-runner-test-suite)
 - [Tags](https://junit.org/junit5/docs/current/user-guide/#writing-tests-tagging-and-filtering) [и отдельный запуск](https://junit.org/junit5/docs/current/user-guide/#running-tests-build-maven-filter-tags)
+- [x] [Parameterized tests](https://junit.org/junit5/docs/current/user-guide/#writing-tests-parameterized-tests)
 
 ---
 
@@ -408,10 +436,8 @@ Docker for QA <sup>1</sup>
 - backend
 - API
 - client
-- [ ] Configurations used
-- [ ] Overview of [demo application](https://github.com/eugene-krivosheyev/agile-practices-application)
-- [ ] [How to build](https://github.com/eugene-krivosheyev/agile-practices-application/blob/master/README.md)
-- [ ] [Built release](https://github.com/eugene-krivosheyev/agile-practices-application/releases)
+- [ ] Authentication
+- [ ] Overview of [demo application](app.codegen/README.md)
 
 ### Docker overview <sup>0.2</sup>
 - [ ] Docker: why?
@@ -422,20 +448,17 @@ Docker for QA <sup>1</sup>
 
 ### Docker Image <sup>0.2</sup>
 - [ ] Images naming and tags
+- [ ] `build`
 - [ ] `ls`
-- [ ] `pull`
-- [ ] `rm`, `prune`
+- [ ] `pull`/`push`
+- [ ] `rm`
 
 ### Docker container <sup>0.2</sup>
 - [ ] Containers naming
+- [ ] port mappings
 - [ ] `ls`
-- [ ] `create`
-- [ ] `start`
-- [ ] `stop`
-- [ ] ports
-- [ ] mounts
+- [ ] `run`
 - [ ] `log`
-- [ ] `exec`
 
 ### Configuration externalization <sup>0.1</sup>
 - [ ] Externalization: why?
@@ -443,43 +466,78 @@ Docker for QA <sup>1</sup>
 
 ### Orchestration <sup>0.1</sup>
 - [ ] Orchestration: why?
+- [ ] Primitive orchestration with docker-compose
+```shell
+cd app.codegen
+
+docker-compose up --detach
+
+docker-compose ls
+docker-compose ps
+docker-compose logs
+
+docker-compose down
+```
 
 ---
 
 Java REST API Testing <sup>1</sup>
 ---------------------
-
 ### REST API description <sup>0.2</sup>
-- [ ] OpenAPI
-- [ ] Swagger
+- [ ] [Swagger](https://swagger.io)
+- [ ] [OpenAPI](https://ru.wikipedia.org/wiki/OpenAPI_(спецификация))
+
+### REST intro
+- [ ] REST request and response
+- Method
+- Params
+- Headers
+- Body
+- Status / Error code
+- [ ] HTTP methods
+- for CRUD
+- [x] [POST vs PUT](https://stackoverflow.com/questions/630453/what-is-the-difference-between-post-and-put-in-http)
 
 ### REST Assured <sup>0.4</sup>
 - [ ] [Overview](https://rest-assured.io)
 - [ ] [Best Practices](https://habr.com/ru/post/421005/)
 
 ### Retrofit <sup>0.4</sup>
-- [ ] [Overview](https://square.github.io/retrofit/)
-- [ ] [CRUD](https://guides.codepath.com/android/consuming-apis-with-retrofit)
-- [ ] [Domain objects vs JSON Schema](https://www.jsonschema2pojo.org) 
-- [ ] [Error Handling](https://futurestud.io/tutorials/retrofit-2-simple-error-handling)
+- [x] [Overview](https://square.github.io/retrofit/)
+- [x] [CRUD](https://guides.codepath.com/android/consuming-apis-with-retrofit)
+- [x] [Domain objects vs JSON Schema](https://www.jsonschema2pojo.org) 
+- [x] [Error Handling](https://futurestud.io/tutorials/retrofit-2-simple-error-handling)
+
+### TestContainers
+- [x] Manage containers directly from tests with [TestContainers](https://www.testcontainers.org)
 
 ---
 
 Testing DB applications <sup>1</sup>
 -----------------------
 
+### Running App with external DB
+- [ ] Externalizing App configuration for external DB
+- [ ] Running containerized DB
+- [ ] Running containerized App
+
 ### DBMS overview <sup>0.2</sup>
-- [ ] Application testing architecture
-- [ ] Test scopes
-- [ ] Testing stateful applications
-- [ ] Test fixture patterns
+- [x] Application testing architecture
+- [x] Test scopes
+- [x] Testing stateful applications
+- [x] Test fixture patterns
 
 ### SQL overview <sup>0.1</sup>
-- [ ] DDL vs DML
-- [ ] inserts
-- [ ] updates
-- [ ] selects
-- [ ] joins
+- [x] DDL vs DML
+- [x] inserts
+- [x] updates
+- [x] selects
+- [x] joins
+
+### DB overview with IDEA
+- [ ] DB client at IDEA
+- [ ] Connecting
+- [ ] Overview
 
 ### JDBC intro <sup>0.7</sup>
 - [ ] Driver
@@ -497,6 +555,7 @@ Building CI/CD pipeline with GitLab <sup>1</sup>
 - [ ] Why CI/CD?
 - [ ] Pipeline overview
 - [ ] IaaC
+- [ ] [Install Gitlab locally](https://docs.gitlab.com/ee/install/docker.html)
 
 ### GitLab CI pipeline running and monitoring <sup>0.4</sup>
 - [ ] Creating project and pipeline
