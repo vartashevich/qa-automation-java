@@ -1,6 +1,7 @@
 import io.restassured.RestAssured;
 import io.restassured.authentication.PreemptiveBasicAuthScheme;
 import io.restassured.http.ContentType;
+import io.restassured.response.Response;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
@@ -64,10 +65,19 @@ public class CountryTests {
 
     @Test
     public void deleteCountryExisted() {
-        when()
-                .delete("/api/countries/9")
+        String requestBody = "{\n"
+                + "    \"countryName\": \"ld\"\n"
+                + "}";
+        Response response = given()
+                .contentType(ContentType.JSON)
+                .body(requestBody)
+                .post("/api/countries")
                 .then()
-                .statusCode(204);
+                .extract().response();
+        System.out.println(response.jsonPath().getString("id"));
+        when()
+                .delete("/api/countries/" + response.jsonPath().getString("id"))
+                .then().statusCode(204);
     }
 
     @Test
