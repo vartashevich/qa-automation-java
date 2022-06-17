@@ -1,6 +1,8 @@
 .idea/
 *.iml
 gen/
-app.codegen/build/
+app.codegen/build.temp/
 out/
 target/
+.DS_Store
+
