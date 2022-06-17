@@ -2,6 +2,7 @@ import io.restassured.RestAssured;
 import io.restassured.authentication.PreemptiveBasicAuthScheme;
 import io.restassured.http.ContentType;
 import io.restassured.response.Response;
+import org.hamcrest.Matchers;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
@@ -15,11 +16,6 @@ import static org.hamcrest.Matchers.equalTo;
  * @author Viktor Artashevich
  */
 public class CountryTests {
-    String requestBody = "{\n"
-            + "    \"id\": \"1\",\n"
-            + "    \"countryName\": \"xx\"\n"
-            + "}";
-
     @BeforeAll
     public static void setUp() {
         PreemptiveBasicAuthScheme authScheme = new PreemptiveBasicAuthScheme();
@@ -44,6 +40,10 @@ public class CountryTests {
 
     @Test
     public void putAnotherCountryInExisted() {
+        String requestBody = "{\n"
+                + "    \"id\": \"1\",\n"
+                + "    \"countryName\": \"xx\"\n"
+                + "}";
         given()
                 .contentType(ContentType.JSON)
                 .body(requestBody)
@@ -55,12 +55,17 @@ public class CountryTests {
 
     @Test
     public void patchCountryExisted() {
+        String requestBody = "{\n"
+                + "    \"id\": \"1\",\n"
+                + "    \"countryName\": \"xx\"\n"
+                + "}";
         given()
                 .contentType(ContentType.JSON)
                 .body(requestBody)
                 .patch("/api/countries/1")
                 .then()
-                .statusCode(200);
+                .statusCode(200)
+                .body("countryName", equalTo("xx"));
     }
 
     @Test
@@ -73,11 +78,15 @@ public class CountryTests {
                 .body(requestBody)
                 .post("/api/countries")
                 .then()
+                .statusCode(201)
                 .extract().response();
-        System.out.println(response.jsonPath().getString("id"));
         when()
                 .delete("/api/countries/" + response.jsonPath().getString("id"))
                 .then().statusCode(204);
+        when()
+                .get("/api/countries/" + response.jsonPath().getString("id"))
+                .then()
+                .statusCode(404);
     }
 
     @Test
@@ -85,7 +94,8 @@ public class CountryTests {
         when()
                 .get("/api/countries")
                 .then()
-                .statusCode(200);
+                .statusCode(200)
+                .body("size()", Matchers.not(0));
     }
 
     @Test
@@ -93,12 +103,26 @@ public class CountryTests {
         String requestBody = "{\n"
                 + "    \"countryName\": \"kk\"\n"
                 + "}";
-        given()
-                .contentType(ContentType.JSON)
-                .body(requestBody)
-                .post("/api/countries")
-                .then()
-                .statusCode(201)
-                .body("countryName", equalTo("kk"));
+        String id = null;
+        try {
+            Response response = given()
+                    .contentType(ContentType.JSON)
+                    .body(requestBody)
+                    .post("/api/countries")
+                    .then()
+                    .statusCode(201)
+                    .body("countryName", equalTo("kk"))
+                    .extract().response();
+            id = response.jsonPath().getString("id");
+        } catch (Throwable e) {
+            throw e;
+        } finally {
+            if (id != null) {
+                when()
+                        .delete("/api/countries/" + id)
+                        .then().statusCode(204);
+            }
+        }
     }
 }
+
